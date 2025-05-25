@@ -1,0 +1,63 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.nav-brand a {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #007bff;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #007bff;
+  background: #f8f9fa;
+}
+
+.app-main {
+  flex: 1;
+  background: #f8f9fa;
+}
+
+.app-footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 14px;
+}
