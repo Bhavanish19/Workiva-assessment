@@ -1,0 +1,114 @@
+<div class="search-container" [formGroup]="searchForm">
+  <!-- Main Search Bar -->
+  <div class="search-bar">
+    <div class="search-input-wrapper">
+      <input
+        type="text"
+        formControlName="searchTerm"
+        placeholder="Search products..."
+        class="search-input"
+        aria-label="Search products"
+        autocomplete="off">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </div>
+    
+    <button
+      type="button"
+      class="filter-toggle-btn"
+      (click)="toggleAdvancedFilters()"
+      [class.active]="showAdvancedFilters"
+      aria-label="Toggle advanced filters">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+      </svg>
+      Filters
+      <span class="filter-count" *ngIf="hasActiveFilters()">●</span>
+    </button>
+  </div>
+
+  <!-- Advanced Filters -->
+  <div class="advanced-filters" [class.show]="showAdvancedFilters">
+    <div class="filters-grid">
+      <!-- Category Filter -->
+      <div class="filter-group">
+        <label for="category" class="filter-label">Category</label>
+        <select formControlName="category" id="category" class="filter-select">
+          <option value="">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-group">
+        <label for="brand" class="filter-label">Brand</label>
+        <select formControlName="brand" id="brand" class="filter-select">
+          <option value="">All Brands</option>
+          <option *ngFor="let brand of brands" [value]="brand">
+            {{ brand }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Price Range -->
+      <div class="filter-group">
+        <label class="filter-label">Price Range</label>
+        <div class="price-range">
+          <input
+            type="number"
+            formControlName="minPrice"
+            placeholder="Min"
+            class="price-input"
+            min="0"
+            step="0.01"
+            aria-label="Minimum price">
+          <span class="price-separator">-</span>
+          <input
+            type="number"
+            formControlName="maxPrice"
+            placeholder="Max"
+            class="price-input"
+            min="0"
+            step="0.01"
+            aria-label="Maximum price">
+        </div>
+      </div>
+
+      <!-- Stock Status -->
+      <div class="filter-group">
+        <label for="inStock" class="filter-label">Availability</label>
+        <select formControlName="inStock" id="inStock" class="filter-select">
+          <option value="">All Products</option>
+          <option value="true">In Stock</option>
+          <option value="false">Out of Stock</option>
+        </select>
+      </div>
+
+      <!-- Rating Filter -->
+      <div class="filter-group">
+        <label for="rating" class="filter-label">Minimum Rating</label>
+        <select formControlName="rating" id="rating" class="filter-select">
+          <option value="">Any Rating</option>
+          <option value="4">4+ Stars</option>
+          <option value="4.5">4.5+ Stars</option>
+          <option value="5">5 Stars</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Filter Actions -->
+    <div class="filter-actions">
+      <button
+        type="button"
+        class="clear-filters-btn"
+        (click)="onClearFilters()"
+        [disabled]="!hasActiveFilters()">
+        Clear All Filters
+      </button>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,135 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h1>Shopping Cart</h1>
+    <p *ngIf="cart.totalItems > 0">{{ cart.totalItems }} {{ cart.totalItems === 1 ? 'item' : 'items' }}</p>
+  </div>
+
+  <!-- Empty Cart -->
+  <div *ngIf="cart.items.length === 0" class="empty-cart">
+    <div class="empty-cart-content">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="empty-cart-icon">
+        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"/>
+      </svg>
+      <h3>Your cart is empty</h3>
+      <p>Add some products to get started!</p>
+      <a routerLink="/products" class="continue-shopping-btn">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+
+  <!-- Cart Items -->
+  <div *ngIf="cart.items.length > 0" class="cart-content">
+    <div class="cart-items">
+      <div 
+        *ngFor="let item of cart.items; trackBy: trackByItemId"
+        class="cart-item">
+        
+        <!-- Product Image -->
+        <div class="item-image">
+          <img 
+            [src]="item.product.imageUrl" 
+            [alt]="item.product.name"
+            loading="lazy">
+        </div>
+
+        <!-- Product Info -->
+        <div class="item-info">
+          <h3 class="item-name">{{ item.product.name }}</h3>
+          <p class="item-brand" *ngIf="item.product.brand">{{ item.product.brand }}</p>
+          <p class="item-category">{{ item.product.category }}</p>
+          
+          <!-- Price -->
+          <div class="item-price">
+            <span class="current-price">
+              ${{ getDiscountedPrice(item) | number:'1.2-2' }}
+            </span>
+            <span 
+              *ngIf="item.product.originalPrice && item.product.discount"
+              class="original-price">
+              ${{ item.product.originalPrice | number:'1.2-2' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Quantity Controls -->
+        <div class="item-quantity">
+          <label class="quantity-label">Quantity</label>
+          <div class="quantity-controls">
+            <button 
+              type="button"
+              class="quantity-btn decrease"
+              (click)="updateQuantity(item.product.id, item.quantity - 1)"
+              [attr.aria-label]="'Decrease quantity of ' + item.product.name">
+              -
+            </button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button 
+              type="button"
+              class="quantity-btn increase"
+              (click)="updateQuantity(item.product.id, item.quantity + 1)"
+              [attr.aria-label]="'Increase quantity of ' + item.product.name">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- Item Total -->
+        <div class="item-total">
+          <span class="total-label">Total</span>
+          <span class="total-price">
+            ${{ getItemTotal(item) | number:'1.2-2' }}
+          </span>
+        </div>
+
+        <!-- Remove Button -->
+        <div class="item-actions">
+          <button 
+            type="button"
+            class="remove-btn"
+            (click)="removeItem(item.product.id)"
+            [attr.aria-label]="'Remove ' + item.product.name + ' from cart'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="m19,6v14a2,2 0 01-2,2H7a2,2 0 01-2-2V6m3,0V4a2,2 0 012-2h4a2,2 0 012,2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="cart-summary">
+      <div class="summary-content">
+        <h3>Order Summary</h3>
+        
+        <div class="summary-row">
+          <span>Subtotal ({{ cart.totalItems }} items)</span>
+          <span>${{ cart.totalPrice | number:'1.2-2' }}</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="free-shipping">Free</span>
+        </div>
+        
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span class="total-amount">${{ cart.totalPrice | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="summary-actions">
+          <button type="button" class="checkout-btn">
+            Proceed to Checkout
+          </button>
+          <button 
+            type="button" 
+            class="clear-cart-btn"
+            (click)="clearCart()">
+            Clear Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,28 +1,118 @@
 <div class="product-list-container">
+  <!-- Header -->
   <div class="header">
     <h1>Our Products</h1>
     <p>Discover our amazing collection of products</p>
   </div>
 
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>Loading products...</p>
+  <!-- Search and Filters -->
+  <app-product-search
+    (filterChange)="onFilterChange($event)"
+    (clearFilters)="onClearFilters()">
+  </app-product-search>
+
+  <!-- Active Filters Summary -->
+  <div class="filter-summary" *ngIf="hasActiveFilters()">
+    <div class="filter-info">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+      </svg>
+      <span>Filtered by: {{ getFilterSummary() }}</span>
+    </div>
+    <button 
+      type="button" 
+      class="clear-all-btn"
+      (click)="onClearFilters()"
+      aria-label="Clear all filters">
+      Clear All
+    </button>
   </div>
 
-  <div *ngIf="error" class="error">
-    <p>{{ error }}</p>
-    <button (click)="loadProducts()">Retry</button>
+  <!-- Loading State -->
+  <app-loading-spinner 
+    *ngIf="loading" 
+    size="large" 
+    message="Loading products...">
+  </app-loading-spinner>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-content">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="error-icon">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      <h3>Oops! Something went wrong</h3>
+      <p>{{ error }}</p>
+      <div class="error-actions">
+        <button 
+          type="button"
+          class="retry-btn"
+          (click)="onRetry()"
+          [disabled]="loading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="23,4 23,10 17,10"></polyline>
+            <path d="M20.49,15a9,9 0 11-2.12-9.36L23,10"></path>
+          </svg>
+          Try Again
+        </button>
+      </div>
+      <p class="retry-info" *ngIf="retryCount > 0">
+        Retry attempt: {{ retryCount }}/{{ maxRetries }}
+      </p>
+    </div>
   </div>
 
-  <div *ngIf="!loading && !error" class="products-grid">
-    <app-product-card 
-      *ngFor="let product of products" 
-      [product]="product"
-      (productSelected)="onProductSelected($event)">
-    </app-product-card>
-  </div>
+  <!-- Products Section -->
+  <div *ngIf="!loading && !error" class="products-section">
+    <!-- Results Header -->
+    <div class="results-header" *ngIf="pagination.totalItems > 0">
+      <h2>
+        {{ pagination.totalItems }} 
+        {{ pagination.totalItems === 1 ? 'Product' : 'Products' }}
+        <span *ngIf="hasActiveFilters()">Found</span>
+      </h2>
+    </div>
 
-  <div *ngIf="!loading && !error && products.length === 0" class="no-products">
-    <p>No products available at the moment.</p>
+    <!-- Products Grid -->
+    <div class="products-grid" *ngIf="products.length > 0">
+      <app-product-card 
+        *ngFor="let product of products; trackBy: trackByProductId" 
+        [product]="product"
+        (productSelected)="onProductSelected($event)">
+      </app-product-card>
+    </div>
+
+    <!-- No Products Found -->
+    <div *ngIf="products.length === 0" class="no-products">
+      <div class="no-products-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="no-products-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <h3>No products found</h3>
+        <p *ngIf="hasActiveFilters(); else noProductsDefault">
+          We couldn't find any products matching your criteria. Try adjusting your filters.
+        </p>
+        <ng-template #noProductsDefault>
+          <p>No products are available at the moment. Please check back later.</p>
+        </ng-template>
+        <button 
+          *ngIf="hasActiveFilters()"
+          type="button"
+          class="clear-filters-btn"
+          (click)="onClearFilters()">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <app-pagination
+      *ngIf="products.length > 0"
+      [pagination]="pagination"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
   </div>
 </div>

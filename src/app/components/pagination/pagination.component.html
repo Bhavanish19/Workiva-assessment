@@ -1,0 +1,86 @@
+<div class="pagination-container" *ngIf="pagination && pagination.totalPages > 1">
+  <!-- Results Info -->
+  <div class="results-info">
+    <span class="results-text">
+      Showing {{ getStartItem() }}-{{ getEndItem() }} of {{ pagination.totalItems }} results
+    </span>
+  </div>
+
+  <!-- Pagination Controls -->
+  <nav class="pagination-nav" aria-label="Pagination Navigation">
+    <ul class="pagination-list">
+      <!-- First Page -->
+      <li class="pagination-item">
+        <button
+          type="button"
+          class="pagination-btn first-btn"
+          [disabled]="pagination.page === 1"
+          (click)="onFirstClick()"
+          aria-label="Go to first page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="11,19 2,12 11,5 11,19"></polygon>
+            <polygon points="22,19 13,12 22,5 22,19"></polygon>
+          </svg>
+        </button>
+      </li>
+
+      <!-- Previous Page -->
+      <li class="pagination-item">
+        <button
+          type="button"
+          class="pagination-btn prev-btn"
+          [disabled]="pagination.page === 1"
+          (click)="onPreviousClick()"
+          aria-label="Go to previous page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+          <span class="btn-text">Previous</span>
+        </button>
+      </li>
+
+      <!-- Page Numbers -->
+      <li class="pagination-item" *ngFor="let pageNum of visiblePages">
+        <button
+          type="button"
+          class="pagination-btn page-btn"
+          [class.active]="pageNum === pagination.page"
+          (click)="onPageClick(pageNum)"
+          [attr.aria-label]="'Go to page ' + pageNum"
+          [attr.aria-current]="pageNum === pagination.page ? 'page' : null">
+          {{ pageNum }}
+        </button>
+      </li>
+
+      <!-- Next Page -->
+      <li class="pagination-item">
+        <button
+          type="button"
+          class="pagination-btn next-btn"
+          [disabled]="pagination.page === pagination.totalPages"
+          (click)="onNextClick()"
+          aria-label="Go to next page">
+          <span class="btn-text">Next</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </li>
+
+      <!-- Last Page -->
+      <li class="pagination-item">
+        <button
+          type="button"
+          class="pagination-btn last-btn"
+          [disabled]="pagination.page === pagination.totalPages"
+          (click)="onLastClick()"
+          aria-label="Go to last page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polygon points="13,5 2,12 13,19 13,5"></polygon>
+            <polygon points="22,5 11,12 22,19 22,5"></polygon>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div> 

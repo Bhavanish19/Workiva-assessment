@@ -18,24 +18,24 @@
 
   <div *ngIf="product && !loading" class="product-detail">
     <div class="product-image">
-      <img [src]="product?.imageUrl" [alt]="product?.name" />
-      <span class="stock-badge" [class.out-of-stock]="!product?.inStock">
-        {{ product?.inStock ? 'In Stock' : 'Out of Stock' }}
+      <img [src]="product.imageUrl" [alt]="product.name" />
+      <span class="stock-badge" [class.out-of-stock]="!product.inStock">
+        {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
       </span>
     </div>
     
     <div class="product-info">
-      <div class="product-category">{{ product?.category }}</div>
-      <h1 class="product-name">{{ product?.name }}</h1>
-      <div class="product-price">${{ product?.price | number:'1.2-2' }}</div>
-      <p class="product-description">{{ product?.description }}</p>
+      <div class="product-category">{{ product.category }}</div>
+      <h1 class="product-name">{{ product.name }}</h1>
+      <div class="product-price">${{ product.price | number:'1.2-2' }}</div>
+      <p class="product-description">{{ product.description }}</p>
       
       <div class="product-actions">
         <button 
           class="add-to-cart-btn" 
-          [disabled]="!product?.inStock"
-          [class.disabled]="!product?.inStock">
-          {{ product?.inStock ? 'Add to Cart' : 'Out of Stock' }}
+          [disabled]="!product.inStock"
+          [class.disabled]="!product.inStock">
+          {{ product.inStock ? 'Add to Cart' : 'Out of Stock' }}
         </button>
         <button class="wishlist-btn">Add to Wishlist</button>
       </div>
@@ -43,9 +43,9 @@
       <div class="product-details">
         <h3>Product Details</h3>
         <ul>
-          <li><strong>Product ID:</strong> {{ product?.id }}</li>
-          <li><strong>Category:</strong> {{ product?.category }}</li>
-          <li><strong>Availability:</strong> {{ product?.inStock ? 'In Stock' : 'Out of Stock' }}</li>
+          <li><strong>Product ID:</strong> {{ product.id }}</li>
+          <li><strong>Category:</strong> {{ product.category }}</li>
+          <li><strong>Availability:</strong> {{ product.inStock ? 'In Stock' : 'Out of Stock' }}</li>
         </ul>
       </div>
     </div>

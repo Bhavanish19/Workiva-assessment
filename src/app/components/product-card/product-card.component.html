@@ -1,15 +1,123 @@
-<div class="product-card" (click)="onProductClick()">
-  <div class="product-image">
-    <img [src]="product?.imageUrl" [alt]="product?.name" />
-    <span class="stock-badge" [class.out-of-stock]="!product?.inStock">
-      {{ product?.inStock ? 'In Stock' : 'Out of Stock' }}
-    </span>
+<div class="product-card" (click)="onProductClick()" [class.out-of-stock]="!product.inStock">
+  <!-- Product Image -->
+  <div class="product-image-container">
+    <img 
+      [src]="product.imageUrl" 
+      [alt]="product.name"
+      class="product-image"
+      loading="lazy">
+    
+    
+    <!-- Stock Status Badge -->
+    <div class="stock-badge" [ngClass]="getStockStatusClass()">
+      {{ getStockStatusText() }}
+    </div>
   </div>
+
+  <!-- Product Info -->
   <div class="product-info">
-    <h3 class="product-name">{{ product?.name }}</h3>
-    <p class="product-category">{{ product?.category }}</p>
-    <p class="product-description">{{ product?.description }}</p>
-    <div class="product-price">${{ product?.price | number:'1.2-2' }}</div>
-    <button class="view-details-btn" type="button">View Details</button>
+    <!-- Brand -->
+    <div class="product-brand" *ngIf="product.brand">{{ product.brand }}</div>
+    
+    <!-- Product Name -->
+    <h3 class="product-name">{{ product.name }}</h3>
+    
+    <!-- Category -->
+    <p class="product-category">{{ product.category }}</p>
+    
+    <!-- Rating -->
+    <div class="product-rating" *ngIf="product.rating">
+      <div class="stars">
+        <span 
+          *ngFor="let filled of getStarArray(); trackBy: trackByFn"
+          class="star"
+          [class.filled]="filled">
+          ★
+        </span>
+      </div>
+      <span class="rating-text">
+        {{ product.rating }} ({{ product.reviewCount }} reviews)
+      </span>
+    </div>
+    
+    <!-- Description -->
+    <p class="product-description">{{ product.description }}</p>
+    
+    <!-- Price -->
+    <div class="price-container">
+      <div class="current-price">
+        ${{ getDiscountedPrice() | number:'1.2-2' }}
+      </div>
+      <div class="original-price" *ngIf="product.originalPrice && product.discount">
+        ${{ product.originalPrice | number:'1.2-2' }}
+      </div>
+    </div>
+    
+    <!-- Tags -->
+    <div class="product-tags" *ngIf="product.tags && product.tags.length > 0">
+      <span 
+        *ngFor="let tag of product.tags" 
+        class="tag">
+        {{ tag }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="product-actions">
+    <!-- Add to Cart / Cart Controls -->
+    <div class="cart-controls" *ngIf="!isInCart; else cartQuantityControls">
+      <button 
+        type="button"
+        class="add-to-cart-btn"
+        [disabled]="!product.inStock || isAddingToCart"
+        (click)="onAddToCart($event)"
+        [attr.aria-label]="'Add ' + product.name + ' to cart'">
+        <svg *ngIf="!isAddingToCart" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5M17 21a2 2 0 100-4 2 2 0 000 4zM9 21a2 2 0 100-4 2 2 0 000 4z"/>
+        </svg>
+        <div *ngIf="isAddingToCart" class="mini-spinner"></div>
+        {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
+      </button>
+    </div>
+
+    <!-- Cart Quantity Controls -->
+    <ng-template #cartQuantityControls>
+      <div class="quantity-controls">
+        <button 
+          type="button"
+          class="quantity-btn decrease"
+          (click)="onUpdateQuantity($event, cartQuantity - 1)"
+          [attr.aria-label]="'Decrease quantity of ' + product.name">
+          -
+        </button>
+        <span class="quantity">{{ cartQuantity }}</span>
+        <button 
+          type="button"
+          class="quantity-btn increase"
+          (click)="onUpdateQuantity($event, cartQuantity + 1)"
+          [attr.aria-label]="'Increase quantity of ' + product.name">
+          +
+        </button>
+        <button 
+          type="button"
+          class="remove-btn"
+          (click)="onRemoveFromCart($event)"
+          [attr.aria-label]="'Remove ' + product.name + ' from cart'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="m19,6v14a2,2 0 01-2,2H7a2,2 0 01-2-2V6m3,0V4a2,2 0 012-2h4a2,2 0 012,2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </ng-template>
+
+    <!-- View Details Button -->
+    <button 
+      type="button"
+      class="view-details-btn"
+      [attr.aria-label]="'View details for ' + product.name">
+      View Details
+    </button>
   </div>
 </div>
